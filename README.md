@@ -34,8 +34,7 @@ pip install Flask pandas numpy matplotlib seaborn
 3.  运行 Flask 应用：
 
     ```bash
-    cd visual
-    python app.py
+    python -m visual.app
     ```
 
 4.  在浏览器中打开显示的地址 (通常是 `http://127.0.0.1:5000/`) 来查看可视化结果。
