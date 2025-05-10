@@ -131,7 +131,7 @@ def index():
                                 metric_col_name='metric', # Pass the name of the metric column
                                 axis=None # Apply to the entire DataFrame slice
                             ).format(
-                                {col: "{:.4f}" for col in performance_cols_in_group}, na_rep='N/A'
+                                {col: "{:.4f}" for col in performance_cols_in_group}, na_rep=''
                             ).set_table_attributes(
                                 'class="table table-striped table-hover table-sm table-responsive-sm"'
                             ).hide(axis="index").to_html()

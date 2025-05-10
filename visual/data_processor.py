@@ -103,6 +103,12 @@ def load_and_process_data(csv_path='results/collected_partial_summary.csv'):
         'dataset': 'dataset', 'horizon': 'horizon', 'split': 'split',
         'metric': 'metric', 'value': 'value'
     }, inplace=True)
+
+    # Fill NaN values first (especially in numeric columns that might become strings later)
+    df.fillna('', inplace=True)
+    # Then replace specific strings like 'None', 'N/A' (case-insensitive, trims whitespace)
+    df.replace(to_replace=r'^\s*(None|N/A)\s*$', value='', regex=True, inplace=True)
+    
     return df
 
 if __name__ == '__main__':
