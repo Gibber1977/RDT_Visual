@@ -4,63 +4,21 @@
 
 {% block head_extra %}
 <style>
+    /* Styles for tables and general page layout */
     .table-sm th, .table-sm td {
         padding: 0.4rem;
-        font-size: 0.85rem; /* Smaller font for tables */
+        font-size: 0.85rem;
     }
-    .card-img-top-container {
-        max-height: 400px; /* Or any other height */
-        overflow-y: auto; /* Allows scrolling if image is too tall */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #f8f9fa; /* Light background for image area */
-    }
-    .card-img-top {
-        max-width: 100%;
-        max-height: 100%; /* Ensure image fits container */
-        object-fit: contain; /* Scales image down to fit, maintaining aspect ratio */
-    }
-    .plot-card {
-        margin-bottom: 20px;
-    }
-    h2, h3 {
-        margin-top: 20px;
-        margin-bottom: 15px;
-        color: #343a40;
-    }
-    .table-responsive {
-        margin-top: 15px;
-        margin-bottom: 30px;
-    }
-    .performance-better { /* For RDT_vs_TaskOnly */
+    .performance-better {
         color: green;
         font-weight: bold;
     }
-    .performance-worse { /* For RDT_vs_TaskOnly */
+    .performance-worse {
         color: red;
         font-weight: bold;
     }
-    .performance-same { /* For RDT_vs_TaskOnly */
+    .performance-same {
         color: orange;
-    }
-    .nav-pills .nav-link {
-        margin-right: 5px;
-    }
-    .legend-item {
-        margin-right: 15px;
-        font-size: 0.9em;
-    }
-    .legend-item strong { /* For 1st best */
-        color: #198754; /* Green */
-    }
-    .legend-item u { /* For 2nd best */
-        color: #198754; /* Green */
-        text-decoration-color: #198754; /* Ensure underline is also green if browser supports */
-    }
-    .legend-item em { /* For 3rd best, though we're just using color now */
-         color: #198754; /* Green */
-         font-style: normal; /* Override default italic if 'em' is used, or use span */
     }
     .style-legend {
         margin-bottom: 15px;
@@ -68,6 +26,31 @@
         background-color: #e9ecef;
         border-radius: 5px;
         text-align: center;
+    }
+    .legend-item {
+        margin-right: 15px;
+        font-size: 0.9em;
+    }
+    .legend-item strong, .legend-item u, .legend-item em {
+        color: #198754;
+    }
+    .legend-item u {
+        text-decoration-color: #198754;
+    }
+    .legend-item em {
+        font-style: normal;
+    }
+    .nav-pills .nav-link {
+        margin-right: 5px;
+    }
+    .table-responsive {
+        margin-top: 15px;
+        margin-bottom: 30px;
+    }
+    h1, h2, h3 {
+        margin-top: 20px;
+        margin-bottom: 15px;
+        color: #343a40;
     }
 </style>
 {% endblock %}
@@ -77,18 +60,16 @@
     <h1 class="mb-4 text-center">{{ title }}</h1>
 
     {% if tables %}
+    <section id="summary-tables-section">
         <h2 class="text-center">性能摘要表 (Test Set, MAE/MSE)</h2>
         <p class="text-center text-muted">
             比较不同训练方法下学生模型的性能。对于每个数据集、预测窗口和指标 (MAE/MSE)，将分别高亮最佳的三个结果。
         </p>
-        
         <div class="style-legend">
             <span class="legend-item"><strong>最佳结果 (第1名): 绿色粗体</strong></span>
             <span class="legend-item"><u>第二好结果 (第2名): 绿色下划线</u></span>
             <span class="legend-item"><span style="color: #198754;">第三好结果 (第3名): 绿色</span></span>
         </div>
-
-        <!-- Nav tabs for datasets -->
         <ul class="nav nav-pills mb-3 justify-content-center" id="datasetTabs" role="tablist">
             {% for group_key, table_html in tables.items() %}
             <li class="nav-item">
@@ -96,8 +77,6 @@
             </li>
             {% endfor %}
         </ul>
-
-        <!-- Tab content -->
         <div class="tab-content" id="datasetTabsContent">
             {% for group_key, table_html in tables.items() %}
             <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="content-{{ group_key|replace(' ', '_')|replace('(', '')|replace(')', '')|replace('=', '')|replace('/', '_') }}" role="tabpanel" aria-labelledby="tab-{{ group_key|replace(' ', '_')|replace('(', '')|replace(')', '')|replace('=', '')|replace('/', '_') }}">
@@ -108,38 +87,11 @@
             </div>
             {% endfor %}
         </div>
+    </section>
     {% else %}
-        <div class="alert alert-warning" role="alert">
-            未能加载或生成摘要表。请检查数据文件和处理逻辑。
-        </div>
-    {% endif %}
-
-    <hr class="my-5">
-
-    {% if plot_files %}
-        <h2 class="text-center mt-5">性能比较图 (Test Set)</h2>
-        <p class="text-center text-muted">以下图表展示了不同模型架构在各个数据集和 Horizon 上的 MAE 和 MSE 表现。</p>
-        <div class="row">
-            {% for plot_file in plot_files %}
-            <div class="col-md-6 col-lg-4">
-                <div class="card plot-card shadow-sm">
-                    <div class="card-header text-center">
-                        <strong>{{ plot_file.replace('_', ' ').replace('.png', '')|title }}</strong>
-                    </div>
-                    <div class="card-img-top-container">
-                         <img src="{{ url_for('static', filename='images/' + plots_dir_name + '/' + plot_file) }}" class="card-img-top" alt="Plot: {{ plot_file }}">
-                    </div>
-                    <div class="card-body text-center">
-                        <a href="{{ url_for('static', filename='images/' + plots_dir_name + '/' + plot_file) }}" class="btn btn-sm btn-outline-primary" target="_blank">查看大图</a>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <div class="alert alert-warning mt-4" role="alert">
-            没有找到可用的图表。请运行 `python -m visual.plotter` 来生成图表。
-        </div>
+    <div class="alert alert-warning mt-4" role="alert">
+        未能加载或生成摘要表。请检查数据文件和处理逻辑。
+    </div>
     {% endif %}
 </div>
 {% endblock %}

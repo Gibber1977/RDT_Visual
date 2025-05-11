@@ -2,10 +2,45 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
+import io
+from flask import send_file
 from visual.data_processor import load_and_process_data
 
-PLOTS_DIR = 'visual/static/images/plots'
-os.makedirs(PLOTS_DIR, exist_ok=True)
+# PLOTS_DIR can be removed if we no longer save files by default
+# PLOTS_DIR = 'visual/static/images/plots'
+# os.makedirs(PLOTS_DIR, exist_ok=True)
+
+def generate_plot_to_bytes(metric_group, dataset, horizon, teacher, student_arch, metric, training_method_order):
+    """
+    Generates a single plot and returns it as a BytesIO object.
+    """
+    plt.figure(figsize=(12, 7))
+    
+    sns.barplot(
+        data=metric_group,
+        x='training_method',
+        y='value',
+        palette='viridis',
+        order=training_method_order
+    )
+    
+    title_teacher_part = f"Teacher: {teacher}" if teacher != 'None' and teacher is not None else "No Explicit Teacher"
+    plot_title = (f'Comparison on {dataset} (H={horizon})\n'
+                  f'{title_teacher_part}, Student Arch: {student_arch} - Metric: {metric.upper()}')
+    
+    plt.title(plot_title, fontsize=14)
+    plt.xlabel('Training Method / Model Type', fontsize=12)
+    plt.ylabel(metric.upper() + ' Value (Lower is Better)', fontsize=12)
+    plt.xticks(rotation=45, ha='right', fontsize=10)
+    plt.yticks(fontsize=10)
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+    plt.tight_layout()
+
+    img_bytes = io.BytesIO()
+    plt.savefig(img_bytes, format='png')
+    plt.close() # Close the figure to free memory
+    img_bytes.seek(0) # Reset stream position to the beginning
+    return img_bytes
 
 def generate_comparison_plots(df, metrics_to_plot=['mae', 'mse']):
     if df is None or df.empty:
@@ -83,24 +118,40 @@ def generate_comparison_plots(df, metrics_to_plot=['mae', 'mse']):
             sanitized_teacher = "".join(c if c.isalnum() else "_" for c in str(teacher))
             sanitized_student_arch = "".join(c if c.isalnum() else "_" for c in student_arch)
 
-            plot_filename = f"{sanitized_dataset}_H{horizon}_T_{sanitized_teacher}_S_{sanitized_student_arch}_{metric}.png"
-            plot_path = os.path.join(PLOTS_DIR, plot_filename)
+            # plot_filename = f"{sanitized_dataset}_H{horizon}_T_{sanitized_teacher}_S_{sanitized_student_arch}_{metric}.png"
+            # plot_path = os.path.join(PLOTS_DIR, plot_filename)
             
-            try:
-                plt.savefig(plot_path)
-                print(f"Saved plot: {plot_path}")
-            except Exception as e:
-                print(f"Error saving plot {plot_path}: {e}")
-            plt.close()
+            # Instead of saving, we would call the new function if this function's structure was kept
+            # For now, this part is effectively replaced by dynamic generation
+            # try:
+            #     plt.savefig(plot_path)
+            #     print(f"Saved plot: {plot_path}")
+            # except Exception as e:
+            #     print(f"Error saving plot {plot_path}: {e}")
+            # plt.close()
+
+            # The new approach will involve calling generate_plot_to_bytes directly from app.py
+            # For each group, so this loop structure might change or be used differently in app.py
+            pass # Placeholder, as saving is removed
 
 def generate_all_plots(data_path='results/collected_partial_summary.csv'):
+    """
+    This function might still be useful for CLI-based bulk generation if needed,
+    but it would need to be adapted to use generate_plot_to_bytes and save them.
+    For web display, app.py will handle data and call generate_plot_to_bytes.
+    """
     df = load_and_process_data(data_path)
     if df is not None:
-        generate_comparison_plots(df, metrics_to_plot=['mae', 'mse'])
+        # This function's original purpose of saving all plots is now superseded
+        # by on-demand generation. If you still need to save all plots to files,
+        # you would iterate and call generate_plot_to_bytes then save the bytes.
+        print("generate_all_plots: Plot generation logic needs to be updated if file saving is still required.")
+        # generate_comparison_plots(df, metrics_to_plot=['mae', 'mse']) # This would now do nothing or error
     else:
         print("Failed to load or process data. Plot generation aborted.")
 
 if __name__ == '__main__':
-    print(f"Generating plots, saving to: {os.path.abspath(PLOTS_DIR)}")
-    generate_all_plots()
-    print("Plot generation process finished.")
+    # print(f"Generating plots, saving to: {os.path.abspath(PLOTS_DIR)}") # PLOTS_DIR might be removed
+    print("Original main execution for plotter.py. This will likely change.")
+    # generate_all_plots() # This call needs review based on new design
+    print("Plot generation process (if any was run by main) finished.")
