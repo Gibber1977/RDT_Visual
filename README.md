@@ -54,3 +54,23 @@ pip install Flask pandas numpy matplotlib seaborn
     - `templates/`: HTML 模板目录
         - `base.html`: 基础 HTML 模板
         - `index.html`: 主页 HTML 模板
+
+## 生成静态网站并部署到 GitHub Pages
+
+除了运行 Flask 应用动态查看结果外，您还可以生成静态网站文件，并将其部署到 GitHub Pages 等静态网站托管服务上。
+
+1.  **确保已安装依赖**：运行静态网站生成脚本需要与运行 Flask 应用相同的依赖。请按照上面的“依赖安装”步骤确保所有依赖已安装。
+2.  **运行生成脚本**：在项目根目录下执行 `generate_static.py` 脚本：
+
+    ```bash
+    python generate_static.py
+    ```
+
+    这个脚本会读取数据，生成包含结果表格的静态 HTML 文件，并将所有静态资源（CSS、图片等）复制到一个名为 `static_site` 的目录中。
+3.  **部署到 GitHub Pages**：
+    *   将您的项目（包括新生成的 `static_site` 目录）推送到 GitHub 仓库。
+    *   在您的 GitHub 仓库页面，进入 "Settings" -> "Pages"。
+    *   在 "Source" 部分，选择您用于部署的分支（例如 `main` 或 `master`），并选择 `/static_site` 文件夹作为静态网站的来源。
+    *   点击 "Save"。GitHub Pages 将自动构建并部署您的网站。部署完成后，您将在该页面看到网站的访问链接。
+
+通过这种方式，您可以方便地分享您的实验结果可视化页面，而无需运行一个完整的 Flask 服务器。
