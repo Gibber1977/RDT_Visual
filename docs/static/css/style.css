@@ -1,0 +1,121 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f6; /* Light grayish blue background */
+    color: #333;
+    line-height: 1.6;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: #fff !important;
+}
+
+.container-fluid {
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.card {
+    border: none; /* Remove default card border */
+    border-radius: 8px; /* Softer corners */
+    transition: transform .2s ease-in-out, box-shadow .2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-5px); /* Slight lift on hover */
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15); /* More pronounced shadow on hover */
+}
+
+.card-header {
+    background-color: #007bff; /* Bootstrap primary blue */
+    color: white;
+    font-size: 1.1rem;
+    border-bottom: none; /* Remove border between header and image */
+    border-top-left-radius: 8px; /* Match card radius */
+    border-top-right-radius: 8px; /* Match card radius */
+}
+
+.card-img-top-container {
+    background-color: #ffffff; /* White background for image area */
+    padding: 10px; /* Padding around the image */
+    border-bottom-left-radius: 0; /* Align with card body if no explicit border */
+    border-bottom-right-radius: 0;
+}
+
+.card-body {
+    background-color: #fff;
+    border-bottom-left-radius: 8px; /* Match card radius */
+    border-bottom-right-radius: 8px; /* Match card radius */
+}
+
+.table {
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    border-radius: 5px;
+    overflow: hidden; /* Ensures border-radius is respected by table content */
+}
+
+.table thead th {
+    background-color: #e9ecef; /* Light grey for table headers */
+    color: #495057; /* Darker text for headers */
+    border-bottom-width: 2px; /* Stronger line under headers */
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f8f9fa; /* Very light hover for table rows */
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.03); /* Subtler striping */
+}
+
+.footer {
+    padding: 1rem 0;
+    font-size: 0.9rem;
+    background-color: #e9ecef !important; /* Consistent light grey footer */
+    border-top: 1px solid #dee2e6; /* Separator line */
+}
+
+h1, h2, h3 {
+    color: #0056b3; /* Darker blue for headings */
+}
+
+.nav-pills .nav-link {
+    color: #007bff;
+    border: 1px solid #007bff;
+    margin: 2px;
+    transition: all 0.3s ease;
+}
+
+.nav-pills .nav-link.active, .nav-pills .nav-link:hover {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.alert {
+    border-radius: 6px;
+}
+
+/* Performance indicators in tables */
+.performance-better {
+    color: #28a745 !important; /* Bootstrap success green */
+    font-weight: bold;
+}
+.performance-worse {
+    color: #dc3545 !important; /* Bootstrap danger red */
+    font-weight: bold;
+}
+.performance-same {
+    color: #ffc107 !important; /* Bootstrap warning yellow */
+    font-weight: bold; /* Make it stand out a bit */
+}
+
+/* Ensure table cells with performance indicators have the color applied */
+td.performance-better, td.performance-worse, td.performance-same {
+    /* These classes are added by JS, !important might be needed if Bootstrap styles override */
+}
